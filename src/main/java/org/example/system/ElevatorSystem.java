@@ -21,6 +21,10 @@ public class ElevatorSystem {
         this.systemContext.updateElevatorStatus(elevatorId, currentFloor, destinationFloor);
     }
 
+    public void step() {
+        this.systemContext.forwardElevators();
+    }
+
     public List<State> states() {
         return this.systemContext.getStates();
     }
@@ -29,7 +33,4 @@ public class ElevatorSystem {
         this.systemContext.stopElevators();
     }
 
-    public SystemContext getSystemContext() {
-        return systemContext;
-    }
 }

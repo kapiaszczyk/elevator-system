@@ -62,4 +62,10 @@ public class SystemContext {
         }
     }
 
+    public void forwardElevators() {
+        for (Elevator elevator : this.elevators) {
+            elevator.setIsActive(true);
+        }
+    }
+
 }

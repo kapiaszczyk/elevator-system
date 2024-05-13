@@ -16,7 +16,7 @@ public class Elevator {
     private final int speed;
     private State state;
     private final ArrayBlockingQueue<Integer> floorQueue;
-    private final AtomicBoolean isActive;
+    private volatile AtomicBoolean isActive;
     private final Thread elevatorThread;
     private final Logger LOGGER;
 
@@ -25,7 +25,7 @@ public class Elevator {
         this.speed = Constants.ELEVATOR_SPEED;
         this.state = new State(this.id, 0, 0);
         this.floorQueue = new ArrayBlockingQueue<>(100);
-        this.isActive = new AtomicBoolean(true);
+        this.isActive = new AtomicBoolean(false);
         this.elevatorThread = new Thread(this::processJobs);
         this.elevatorThread.start();
         this.LOGGER = LoggerFactory.getLogger(Elevator.class.getSimpleName());
@@ -42,44 +42,56 @@ public class Elevator {
     }
 
     private void processJobs() {
-        while (isActive.get()) {
-            try {
-                synchronized (elevatorThread) {
-                    if (floorQueue.isEmpty()) {
-                        continue;
-                    }
+        while (true) {
+            LOGGER.trace("Elevator {} is checking if it can process jobs... ({})", this.id, this.isActive.toString());
 
-                    int targetFloor = floorQueue.peek();
+            while (isActive.get()) {
+                try {
+                    synchronized (elevatorThread) {
+                        if (floorQueue.isEmpty()) {
+                            continue;
+                        }
 
-                    if (targetFloor == this.getState().getCurrentFloor()) {
-                        LOGGER.info("[{}] Already at floor: {}", this.id, targetFloor);
+                        int targetFloor = floorQueue.peek();
+
+                        if (targetFloor == state.getCurrentFloor()) {
+                            LOGGER.info("[{}] Already at floor: {}", this.id, targetFloor);
+                            floorQueue.take();
+                            this.setIsActive(false);
+                            continue;
+                        }
+
+                        int distance = Math.abs(state.getCurrentFloor() - targetFloor);
+                        int neededTime = distance / speed;
+                        state.setDestinationFloor(targetFloor);
+
+                        LOGGER.info("[{}] Moving from {} to {}. This will take {} seconds", this.id, state.getCurrentFloor(), targetFloor, neededTime);
+
+                        Thread.sleep(neededTime * 1000L + 100L);
+
+                        state.setCurrentFloor(targetFloor);
+                        state.setDestinationFloor(-1);
+
+                        LOGGER.info("[{}] Arrived at {}", this.id, state.getCurrentFloor());
+
                         floorQueue.take();
-                        continue;
+
+                        LOGGER.debug("[{}] Remaining in queue: {}", this.id, getFloorQueueContentsAsString());
+
+                        this.setIsActive(false);
+
                     }
 
-                    int distance = Math.abs(state.getCurrentFloor() - targetFloor);
-                    int neededTime = distance / speed;
-                    state.setDestinationFloor(targetFloor);
-
-                    LOGGER.info("[{}] {} -> {}. This will take ({} s)", this.id, this.getState().getCurrentFloor(), targetFloor, neededTime);
-
-                    long waitTimeMillis = neededTime * 1000L + 100;
-                    elevatorThread.wait(waitTimeMillis);
-                    floorQueue.take();
-
-                    state.setCurrentFloor(targetFloor);
-                    state.setDestinationFloor(-1);
-
-                    LOGGER.info("[{}] Arrived at {}.", this.id, this.getState().getCurrentFloor());
-                    LOGGER.debug("[{}] Remaining in queue: {}", this.id, getFloorQueueContentsAsString());
-
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
                 }
-
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
             }
+
+            LOGGER.trace("Elevator {} is not active, stopped processing jobs...", this.id);
+
         }
     }
+
 
     private synchronized int getNextId() {
         return nextId++;
@@ -99,6 +111,14 @@ public class Elevator {
 
     public void setState(State state) {
         this.state = state;
+    }
+
+    public AtomicBoolean getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(boolean active) {
+        this.isActive.set(active);
     }
 
     public void updateState(int currentFloor, int destinationFloor) {

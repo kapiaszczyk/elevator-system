@@ -12,6 +12,10 @@ public class DispatchEventEmitter extends EventEmitter {
 
     private static final EventBus eventBus = EventBus.getInstance();
 
+    public void step() {
+        this.generateEvent();
+    }
+
     @Override
     protected void generateEvent() {
         Random random = new Random();

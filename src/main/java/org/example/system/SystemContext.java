@@ -7,6 +7,7 @@ import org.example.events.Event;
 import org.example.events.EventType;
 import org.example.events.FloorDispatchEvent;
 import org.example.model.Elevator;
+import org.example.model.EventBus;
 import org.example.model.State;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +19,7 @@ public class SystemContext {
 
     private final List<Elevator> elevators;
     private final ExternalDispatcher externalDispatcher;
-    private static final State.EventBus eventBus = State.EventBus.getInstance();
+    private static final EventBus eventBus = EventBus.getInstance();
 
     public SystemContext() {
 

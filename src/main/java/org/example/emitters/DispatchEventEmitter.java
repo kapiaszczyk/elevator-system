@@ -4,13 +4,13 @@ import org.example.constants.Constants;
 import org.example.events.Event;
 import org.example.events.FloorDispatchEvent;
 import org.example.events.InElevatorDispatchEvent;
-import org.example.model.State;
+import org.example.model.EventBus;
 
 import java.util.Random;
 
 public class DispatchEventEmitter extends EventEmitter {
 
-    private static final State.EventBus eventBus = State.EventBus.getInstance();
+    private static final EventBus eventBus = EventBus.getInstance();
 
     public void step() {
         this.generateEvent();

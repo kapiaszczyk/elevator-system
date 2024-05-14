@@ -1,134 +1,73 @@
 package org.example.simulation;
 
-import org.example.constants.Constants;
-import org.example.emitters.DispatchEventEmitter;
-import org.example.events.*;
+import org.example.events.FloorDispatchEvent;
 import org.example.model.State;
-import org.example.system.ElevatorSystem;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.ui.Model;
 
 import java.util.List;
 
-public class SimulationController implements Subscriber {
+@Controller
+public class SimulationController {
 
-    ElevatorSystem elevatorSystem;
-    DispatchEventEmitter dispatchEventEmitter = new DispatchEventEmitter();
-    private volatile boolean simulationRunning = false;
-    private SimulationEventBus simulationEventBus = SimulationEventBus.getInstance();
+    @Autowired
+    private SimulationService service;
 
-    public SimulationController(ElevatorSystem elevatorSystem) {
-        simulationEventBus.subscribe(this);
-        this.elevatorSystem = elevatorSystem;
+    @PostMapping("/api/v1/simulation/start")
+    public ResponseEntity<String> startSimulation() {
+        service.startSimulation();
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @Override
-    public void handleEvent(Event event) {
-
-        switch (event.getEventType()) {
-            case EventType.START_SIMULATION:
-                startSimulation();
-                break;
-            case EventType.STOP_SIMULATION:
-                stopSimulation();
-                break;
-            case EventType.FORWARD_SIMULATION:
-                forwardSimulation();
-                break;
-            case EventType.EMIT_EVENT_SIMULATION:
-                emitEvent(event);
-                break;
-            case EventType.UPDATE_SIMULATION:
-                updateSimulation(event);
-                break;
-            case EventType.FETCH_STATES_SIMULATION:
-                fetchStates();
-                break;
-            case EventType.START_RANDOM_EVENT_EMITTER:
-                startRandomEventEmitter();
-            case EventType.STOP_RANDOM_EVENT_EMITTER:
-                stopRandomEventEmitter();
-            default:
-                break;
-        }
+    @PostMapping("/api/v1/simulation/stop")
+    public ResponseEntity<String> stopSimulation() {
+        service.stopSimulation();
+        service.stopRandomEventEmitter();
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    public void stopRandomEventEmitter() {
-        if (simulationRunning) {
-            dispatchEventEmitter.stop();
-        }
+    @PostMapping("/api/v1/simulation/forward")
+    public ResponseEntity<String> forwardSimulation() {
+        service.forwardSimulation();
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    public void startRandomEventEmitter() {
-        if (simulationRunning) {
-            dispatchEventEmitter.start();
-        }
+    @PostMapping("/api/v1/simulation/start-emitter")
+    public ResponseEntity<String> startEmitter() {
+        service.startRandomEventEmitter();
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    public List<State> fetchStates() {
-        if (simulationRunning) {
-            List<State> states = elevatorSystem.states();
-            for (State state: states) {
-                System.out.println(state);
-            }
-            return states;
-        }
-        return null;
+    @PostMapping("/api/v1/simulation/stop-emitter")
+    public ResponseEntity<String> stopEmitter() {
+        service.stopRandomEventEmitter();
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    public void updateSimulation(Event e) {
-
-        UpdateSimulationEvent event;
-
-        if (e instanceof UpdateSimulationEvent) {
-            event = (UpdateSimulationEvent) e;
-        }
-        else {
-            throw new IllegalArgumentException();
-        }
-
-        int elevator = event.getElevatorId();
-        int currentFloor = event.getCurrentFloor();
-        int destinationFloor = event.getDestinationFloor();
-
-        if (simulationRunning) {
-            elevatorSystem.update(elevator, currentFloor, destinationFloor);
-        }
+    @GetMapping("/api/v1/simulation/system/state")
+    public ResponseEntity<List<State>> getState() {
+        return new ResponseEntity<>(service.fetchStates(), HttpStatus.OK);
     }
 
-    public void emitEvent(Event e) {
-
-        EmitPickupEvent event;
-
-        if (e instanceof EmitPickupEvent) {
-            event= (EmitPickupEvent) e;
-        } else {
-            throw new IllegalArgumentException();
-        }
-
-        int originFloor = event.getFloorOrigin();
-        Constants.Direction direction = event.getDirection();
-
-        if (simulationRunning) {
-            elevatorSystem.pickup(originFloor, direction);
-        }
+    @PostMapping("/api/v1/simulation/system/event")
+    public ResponseEntity<String> emitEvent(@RequestBody FloorDispatchEvent event) {
+        service.emitEvent(event);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    public void forwardSimulation() {
-        if(!simulationRunning) {
-            simulationRunning = true;
-        }
-        if (simulationRunning) {
-            elevatorSystem.step();
-            dispatchEventEmitter.step();
-        }
+    @PostMapping("/api/v1/simulation/system/elevator/{id}/state/current-floor/{current}/destination-floor/{destination}")
+    public ResponseEntity<String> updateElevatorState(@PathVariable("id") int elevatorId, @PathVariable("current") int currentFloor, @PathVariable("destination") int destinationFloor) {
+        service.updateSimulation(elevatorId, currentFloor, destinationFloor);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    public void stopSimulation() {
-        simulationRunning = false;
-        elevatorSystem.stopAll();
-    }
-
-    private void startSimulation() {
-        // do nothing
+    @GetMapping("/")
+    public String renderIndex(Model model) {
+        return "index";
     }
 
 }

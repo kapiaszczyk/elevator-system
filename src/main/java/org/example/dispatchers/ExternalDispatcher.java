@@ -3,7 +3,7 @@ package org.example.dispatchers;
 import org.example.events.Event;
 import org.example.events.FloorDispatchEvent;
 import org.example.events.InElevatorDispatchEvent;
-import org.example.events.Subscriber;
+import org.example.model.Subscriber;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

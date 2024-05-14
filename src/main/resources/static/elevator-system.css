@@ -1,0 +1,14 @@
+#elevatorContainer {
+    width: 100%;
+    background: repeating-linear-gradient(180deg, white, white 20px, #ebebeb 20px, #ebebeb 40px);
+    position: relative;
+    overflow: hidden;
+}
+.elevator {
+    width: 10px;
+    height: 20px;
+    background-color: #7599b1;
+    position: absolute;
+    bottom: 0;
+    transition: bottom 1s ease-in-out;
+}

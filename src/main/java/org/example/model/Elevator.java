@@ -17,6 +17,7 @@ public class Elevator {
     private State state;
     private final LinkedBlockingDeque<Integer> floorQueue;
     private volatile AtomicBoolean isActive;
+    private final Object lock = new Object();
     private final Thread elevatorThread;
     private final Logger LOGGER;
 
@@ -43,13 +44,24 @@ public class Elevator {
 
     private void processJobs() {
         while (true) {
+
             LOGGER.trace("Elevator {} is checking if it can process jobs... ({})", this.id, this.isActive.toString());
+
             try {
                 Thread.sleep(100L);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            while (isActive.get()) {
+
+            synchronized (lock) {
+                while (!isActive.get()) {
+                    try {
+                        lock.wait();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
                 try {
                     synchronized (elevatorThread) {
                         if (floorQueue.isEmpty()) {
@@ -68,33 +80,24 @@ public class Elevator {
                         int distance = Math.abs(state.getCurrentFloor() - targetFloor);
                         int neededTime = distance / speed;
                         state.setDestinationFloor(targetFloor);
-
                         LOGGER.info("[{}] Moving from {} to {}. This will take {} seconds", this.id, state.getCurrentFloor(), targetFloor, neededTime);
 
+                        // Simulates the time it will take the elevator to reach the destination
                         Thread.sleep(neededTime * 1000L + 100L);
 
                         state.setCurrentFloor(targetFloor);
-
                         LOGGER.info("[{}] Arrived at {}", this.id, state.getCurrentFloor());
-
                         floorQueue.take();
-
                         LOGGER.debug("[{}] Remaining in queue: {}", this.id, getFloorQueueContentsAsString());
 
                         this.setIsActive(false);
-
                     }
-
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
             }
-
-            LOGGER.trace("Elevator {} is not active, stopped processing jobs...", this.id);
-
         }
     }
-
 
     private synchronized int getNextId() {
         return nextId++;
@@ -121,7 +124,10 @@ public class Elevator {
     }
 
     public void setIsActive(boolean active) {
-        this.isActive.set(active);
+        isActive.set(active);
+        synchronized (lock) {
+            lock.notify();
+        }
     }
 
     public void updateState(int currentFloor, int destinationFloor) {

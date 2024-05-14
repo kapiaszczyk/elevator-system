@@ -4,20 +4,21 @@ import org.example.constants.Constants;
 import org.example.dispatchers.ExternalDispatcher;
 import org.example.dispatchers.InternalDispatcher;
 import org.example.events.Event;
-import org.example.events.EventBus;
 import org.example.events.EventType;
 import org.example.events.FloorDispatchEvent;
 import org.example.model.Elevator;
 import org.example.model.State;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class SystemContext {
 
     private final List<Elevator> elevators;
     private final ExternalDispatcher externalDispatcher;
-    private static final EventBus eventBus = EventBus.getInstance();
+    private static final State.EventBus eventBus = State.EventBus.getInstance();
 
     public SystemContext() {
 

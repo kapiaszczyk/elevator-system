@@ -2,13 +2,17 @@ package org.example.system;
 
 import org.example.constants.Constants;
 import org.example.model.State;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 public class ElevatorSystem {
 
     private final SystemContext systemContext;
 
+    @Autowired
     public ElevatorSystem() {
         systemContext = new SystemContext();
     }

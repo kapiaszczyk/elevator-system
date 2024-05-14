@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
-import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Elevator {
@@ -15,7 +15,7 @@ public class Elevator {
     private final int id;
     private final int speed;
     private State state;
-    private final ArrayBlockingQueue<Integer> floorQueue;
+    private final LinkedBlockingDeque<Integer> floorQueue;
     private volatile AtomicBoolean isActive;
     private final Thread elevatorThread;
     private final Logger LOGGER;
@@ -24,7 +24,7 @@ public class Elevator {
         this.id = getNextId();
         this.speed = Constants.ELEVATOR_SPEED;
         this.state = new State(this.id, 0, 0);
-        this.floorQueue = new ArrayBlockingQueue<>(100);
+        this.floorQueue = new LinkedBlockingDeque<>();
         this.isActive = new AtomicBoolean(false);
         this.elevatorThread = new Thread(this::processJobs);
         this.elevatorThread.start();
@@ -44,7 +44,11 @@ public class Elevator {
     private void processJobs() {
         while (true) {
             LOGGER.trace("Elevator {} is checking if it can process jobs... ({})", this.id, this.isActive.toString());
-
+            try {
+                Thread.sleep(100L);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
             while (isActive.get()) {
                 try {
                     synchronized (elevatorThread) {
@@ -70,7 +74,6 @@ public class Elevator {
                         Thread.sleep(neededTime * 1000L + 100L);
 
                         state.setCurrentFloor(targetFloor);
-                        state.setDestinationFloor(-1);
 
                         LOGGER.info("[{}] Arrived at {}", this.id, state.getCurrentFloor());
 
@@ -124,6 +127,7 @@ public class Elevator {
     public void updateState(int currentFloor, int destinationFloor) {
         this.state.setCurrentFloor(currentFloor);
         this.state.setDestinationFloor(destinationFloor);
+        this.floorQueue.addFirst(destinationFloor);
     }
 
     private String getFloorQueueContentsAsString() {

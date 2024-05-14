@@ -15,7 +15,7 @@
             </Pattern>
         </encoder>
     </appender>
-    <root level="debug">
+    <root level="info">
         <appender-ref ref="Console"/>
     </root>
 </configuration>

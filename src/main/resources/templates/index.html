@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Simulation Control</title>
+    <script th:inline="javascript" >
+        var numFloors = [[${@environment.getProperty('application.numFloors')}]];
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.css">
+    <link rel="stylesheet" type="text/css" href="elevator-system.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="elevator-system.js"></script>
+</head>
+    <body>
+        <div class="container">
+            <h1>Simulation Control Panel</h1>
+
+            <h2>Step through the simulation</h2>
+
+            <button type="button" onclick="sendSimulationRequest('/api/v1/simulation/start')">Start simulation</button>
+            <button type="button" onclick="sendSimulationRequest('/api/v1/simulation/forward')">Forward simulation</button>
+            <button type="button" onclick="sendSimulationRequest('/api/v1/simulation/stop')">Stop simulation</button>
+            <button type="button" onclick="sendSimulationRequest('/api/v1/simulation/start-emitter')">Start random event emission</button>
+            <button type="button" onclick="sendSimulationRequest('/api/v1/simulation/stop-emitter')">Stop random event emission</button>
+            <button onclick="connectWebSocket()">Connect to server WebSocket</button>
+            <button onclick="disconnectWebSocket()">Disconnect from server WebSocket</button>
+
+            <h2>Visualisation of elevator movement</h2>
+
+            <div id="elevatorContainer"></div>
+
+            <h2>Elevator states</h2>
+
+            <table>
+                <thead>
+                <tr>
+                    <th>Elevator ID</th>
+                    <th>Current floor</th>
+                    <th>Destination floor</th>
+                </tr>
+                </thead>
+                <tbody id="stateTableBody">
+                </tbody>
+            </table>
+
+            <h2>Update elevator state</h2>
+            <form id="updateForm">
+                <label for="elevatorId">Elevator ID</label>
+                <input type="number" id="elevatorId" name="elevatorId" required><br><br>
+                <label for="currentFloor">Current floor</label>
+                <input type="number" id="currentFloor" name="currentFloor" required><br><br>
+                <label for="destinationFloor">Destination floor</label>
+                <input type="number" id="destinationFloor" name="destinationFloor" required><br><br>
+                <button type="button" onclick="updateElevatorState()">Update</button>
+            </form>
+
+            <h2>Emit an event</h2>
+            <form id="emitEventForm">
+                <label for="floorOrigin">Floor origin</label>
+                <input type="number" id="floorOrigin" name="floorOrigin" required><br><br>
+                <label for="directionInput">Select Direction:</label>
+                <select class="browser-default" id="directionInput" name="directionInput" required>
+                    <option value="UP">UP</option>
+                    <option value="DOWN">DOWN</option>
+                </select><br><br>
+                <button type="button" onclick="emitFloorDispatchEvent()">Emit event</button>
+            </form>
+            <br><br>
+
+            <h2>Fetch elevator states</h2>
+            <button type="button" onclick="fetchElevatorStates()">Fetch data</button>
+            <table>
+                <thead>
+                <tr>
+                    <th>Elevator ID</th>
+                    <th>Current floor</th>
+                    <th>Destination floor</th>
+                </tr>
+                </thead>
+                <tbody id="fetchedData">
+                </tbody>
+            </table>
+
+        </div>
+    </body>
+</html>

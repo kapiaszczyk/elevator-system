@@ -1,7 +1,7 @@
 package org.example.model;
 
-import org.example.events.Event;
-import org.example.events.EventType;
+import org.example.event.Event;
+import org.example.event.EventType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

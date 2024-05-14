@@ -1,4 +1,4 @@
-package org.example.controllers;
+package org.example.controller;
 
 import org.example.model.State;
 import org.example.simulation.SimulationService;

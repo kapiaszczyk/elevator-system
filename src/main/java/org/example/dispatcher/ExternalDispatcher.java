@@ -1,8 +1,8 @@
-package org.example.dispatchers;
+package org.example.dispatcher;
 
-import org.example.events.Event;
-import org.example.events.FloorDispatchEvent;
-import org.example.events.InElevatorDispatchEvent;
+import org.example.event.Event;
+import org.example.event.FloorDispatchEvent;
+import org.example.event.InElevatorDispatchEvent;
 import org.example.model.Subscriber;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

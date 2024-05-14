@@ -1,4 +1,4 @@
-package org.example.events;
+package org.example.event;
 
 public class InElevatorDispatchEvent extends DispatchEvent {
 

@@ -1,6 +1,6 @@
 package org.example.model;
 
-import org.example.events.Event;
+import org.example.event.Event;
 
 public interface Subscriber {
 

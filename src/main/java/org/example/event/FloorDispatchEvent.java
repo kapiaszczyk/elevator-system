@@ -1,4 +1,4 @@
-package org.example.events;
+package org.example.event;
 
 import org.example.constants.Constants;
 

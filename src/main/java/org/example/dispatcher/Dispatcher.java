@@ -1,4 +1,4 @@
-package org.example.dispatchers;
+package org.example.dispatcher;
 
 public interface Dispatcher {
 

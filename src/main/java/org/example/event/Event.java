@@ -1,4 +1,4 @@
-package org.example.events;
+package org.example.event;
 
 public abstract class Event {
 

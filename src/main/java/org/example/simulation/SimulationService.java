@@ -1,9 +1,9 @@
 package org.example.simulation;
 
 import org.example.constants.Constants;
-import org.example.emitters.DispatchEventEmitter;
-import org.example.events.Event;
-import org.example.events.FloorDispatchEvent;
+import org.example.emitter.DispatchEventEmitter;
+import org.example.event.Event;
+import org.example.event.FloorDispatchEvent;
 import org.example.model.State;
 import org.example.system.ElevatorSystem;
 import org.slf4j.Logger;

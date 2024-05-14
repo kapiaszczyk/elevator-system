@@ -1,11 +1,11 @@
 package org.example.system;
 
 import org.example.constants.Constants;
-import org.example.dispatchers.ExternalDispatcher;
-import org.example.dispatchers.InternalDispatcher;
-import org.example.events.Event;
-import org.example.events.EventType;
-import org.example.events.FloorDispatchEvent;
+import org.example.dispatcher.ExternalDispatcher;
+import org.example.dispatcher.InternalDispatcher;
+import org.example.event.Event;
+import org.example.event.EventType;
+import org.example.event.FloorDispatchEvent;
 import org.example.model.Elevator;
 import org.example.model.EventBus;
 import org.example.model.State;

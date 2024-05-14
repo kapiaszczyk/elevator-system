@@ -1,9 +1,9 @@
-package org.example.emitters;
+package org.example.emitter;
 
 import org.example.constants.Constants;
-import org.example.events.Event;
-import org.example.events.FloorDispatchEvent;
-import org.example.events.InElevatorDispatchEvent;
+import org.example.event.Event;
+import org.example.event.FloorDispatchEvent;
+import org.example.event.InElevatorDispatchEvent;
 import org.example.model.EventBus;
 
 import java.util.Random;

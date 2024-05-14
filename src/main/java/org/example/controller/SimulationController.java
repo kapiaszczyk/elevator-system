@@ -1,6 +1,6 @@
-package org.example.controllers;
+package org.example.controller;
 
-import org.example.events.FloorDispatchEvent;
+import org.example.event.FloorDispatchEvent;
 import org.example.model.State;
 import org.example.simulation.SimulationService;
 import org.springframework.beans.factory.annotation.Autowired;

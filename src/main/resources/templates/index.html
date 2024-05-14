@@ -21,7 +21,10 @@
 
             <button type="button" onclick="sendSimulationRequest('/api/v1/simulation/start')">Start simulation</button>
             <button type="button" onclick="sendSimulationRequest('/api/v1/simulation/forward')">Forward simulation</button>
+            <button type="button" onclick="sendSimulationRequest('/api/v1/simulation/random-event')">Send random event</button>
             <button type="button" onclick="sendSimulationRequest('/api/v1/simulation/stop')">Stop simulation</button>
+            <button type="button" onclick="sendSimulationRequest('/api/v1/simulation/start-auto')">Start simulation in auto mode</button>
+            <button type="button" onclick="sendSimulationRequest('/api/v1/simulation/stop-auto')">Stop simulation in auto mode</button>
             <button type="button" onclick="sendSimulationRequest('/api/v1/simulation/start-emitter')">Start random event emission</button>
             <button type="button" onclick="sendSimulationRequest('/api/v1/simulation/stop-emitter')">Stop random event emission</button>
             <button onclick="connectWebSocket()">Connect to server WebSocket</button>

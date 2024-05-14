@@ -40,6 +40,12 @@ public class SimulationController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PostMapping("/api/v1/simulation/random-event")
+    public ResponseEntity<String> emitSingleRandomEvent() {
+        service.emitSingleRandomEvent();
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @PostMapping("/api/v1/simulation/start-emitter")
     public ResponseEntity<String> startEmitter() {
         service.startRandomEventEmitter();
@@ -49,6 +55,18 @@ public class SimulationController {
     @PostMapping("/api/v1/simulation/stop-emitter")
     public ResponseEntity<String> stopEmitter() {
         service.stopRandomEventEmitter();
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/api/v1/simulation/start-auto")
+    public ResponseEntity<String> startAutoMode() {
+        service.startSimulationAuto();
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/api/v1/simulation/stop-auto")
+    public ResponseEntity<String> stopAutoMode() {
+        service.stopSimulationAuto();
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

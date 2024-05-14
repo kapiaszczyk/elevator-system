@@ -9,6 +9,7 @@ import org.example.system.ElevatorSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class SimulationService {
     ElevatorSystem elevatorSystem;
     DispatchEventEmitter dispatchEventEmitter = new DispatchEventEmitter();
     private volatile boolean simulationRunning = false;
+    private volatile boolean simulationRunningAuto = false;
     private static final Logger LOGGER = LoggerFactory.getLogger(SimulationService.class.getSimpleName());
 
     @Autowired
@@ -47,6 +49,13 @@ public class SimulationService {
     public void startSimulation() {
         LOGGER.info("Starting simulation");
         simulationRunning = true;
+    }
+
+    public void emitSingleRandomEvent() {
+        LOGGER.info("Emitting a single random event");
+        if (simulationRunning) {
+            dispatchEventEmitter.step();
+        }
     }
 
     public void stopRandomEventEmitter() {
@@ -88,6 +97,27 @@ public class SimulationService {
         LOGGER.info("Event received: FloorDispatchEvent with originFloor {} and direction {}", originFloor, direction);
         elevatorSystem.pickup(originFloor, direction);
 
+    }
+
+    public void startSimulationAuto() {
+        LOGGER.info("Starting simulation in auto mode");
+        dispatchEventEmitter.start();
+        this.simulationRunningAuto = true;
+    }
+
+    public void stopSimulationAuto() {
+        LOGGER.info("Stopping simulation in auto mode");
+        dispatchEventEmitter.stop();
+        this.simulationRunningAuto = false;
+
+    }
+
+    @Scheduled(fixedRate = 1000)
+    public void forwardSimulationScheduled() {
+        if (simulationRunningAuto) {
+            LOGGER.info("Forwarding simulation automatically");
+            elevatorSystem.step();
+        }
     }
 
 }

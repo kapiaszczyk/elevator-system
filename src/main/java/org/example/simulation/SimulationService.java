@@ -29,9 +29,6 @@ public class SimulationService {
     }
 
     public void forwardSimulation() {
-        if(!simulationRunning) {
-            simulationRunning = true;
-        }
         if (simulationRunning) {
             LOGGER.info("Forwarding simulation");
             elevatorSystem.step();
@@ -101,6 +98,9 @@ public class SimulationService {
 
     public void startSimulationAuto() {
         LOGGER.info("Starting simulation in auto mode");
+        if(simulationRunning) {
+            stopSimulation();
+        }
         dispatchEventEmitter.start();
         this.simulationRunningAuto = true;
     }
@@ -118,6 +118,14 @@ public class SimulationService {
             LOGGER.info("Forwarding simulation automatically");
             elevatorSystem.step();
         }
+    }
+
+    public boolean isSimulationRunning() {
+        return simulationRunning;
+    }
+
+    public boolean isSimulationRunningAuto() {
+        return simulationRunningAuto;
     }
 
 }

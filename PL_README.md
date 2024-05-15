@@ -127,7 +127,7 @@ Każdy krok symulacji powiadamia wątki o przetworzeniu zadania - pojedynczego p
 
 Funkcja `DispatchEventEmitter` jest odpowiedzialna za emitowanie losowych zdarzeń do systemu. Jest on uruchamiany w osobnym wątku i może być uruchamiany i zatrzymywany.
 
-![Simplified system architecture](image.png)
+![Simplified system architecture](architecture.png)
 
 <!-- Used algorithms -->
 ### Algorytmy

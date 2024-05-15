@@ -134,7 +134,7 @@ Each step of the simulation notifies the threads to process a job - a single tri
 
 The `DispatchEventEmitter` is responsible for emitting random events to the system. It is run in a separate thread and can be started and stopped.
 
-![Simplified system architecture](image.png)
+![Simplified system architecture](architecture.png)
 
 <!-- Used algorithms -->
 ### Algorithms

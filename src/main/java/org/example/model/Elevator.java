@@ -13,23 +13,19 @@ public class Elevator {
     private static int nextId = 0;
 
     private final int id;
-    private final int speed;
+    private final int speed = Constants.ELEVATOR_SPEED;
     private State state;
-    private final LinkedBlockingDeque<Integer> floorQueue;
-    private volatile AtomicBoolean isActive;
+    private final LinkedBlockingDeque<Integer> floorQueue = new LinkedBlockingDeque<>();
+    private volatile AtomicBoolean isActive = new AtomicBoolean(false);
     private final Object lock = new Object();
     private final Thread elevatorThread;
-    private final Logger LOGGER;
+    private final Logger LOGGER = LoggerFactory.getLogger(Elevator.class.getSimpleName());
 
     public Elevator() {
         this.id = getNextId();
-        this.speed = Constants.ELEVATOR_SPEED;
         this.state = new State(this.id, 0, 0);
-        this.floorQueue = new LinkedBlockingDeque<>();
-        this.isActive = new AtomicBoolean(false);
         this.elevatorThread = new Thread(this::processJobs);
         this.elevatorThread.start();
-        this.LOGGER = LoggerFactory.getLogger(Elevator.class.getSimpleName());
     }
 
     public void addRequest(int floor) {

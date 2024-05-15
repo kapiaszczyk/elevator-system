@@ -16,9 +16,10 @@
     <body>
         <div class="container">
             <h1>Simulation Control Panel</h1>
+            <hr>
+            <h3>Step through the simulation</h3>
 
-            <h2>Step through the simulation</h2>
-
+            <div class="btn-group">
             <button type="button" onclick="sendSimulationRequest('/api/v1/simulation/start')">Start simulation</button>
             <button type="button" onclick="sendSimulationRequest('/api/v1/simulation/forward')">Forward simulation</button>
             <button type="button" onclick="sendSimulationRequest('/api/v1/simulation/random-event')">Send random event</button>
@@ -29,12 +30,13 @@
             <button type="button" onclick="sendSimulationRequest('/api/v1/simulation/stop-emitter')">Stop random event emission</button>
             <button onclick="connectWebSocket()">Connect to server WebSocket</button>
             <button onclick="disconnectWebSocket()">Disconnect from server WebSocket</button>
+            </div>
 
-            <h2>Visualisation of elevator movement</h2>
+            <h3>Visualisation of elevator movement</h3>
 
-            <div id="elevatorContainer"></div>
+            <div id="elevatorContainer"><div id="placeholder">Connect to the server WebSocket to see the elevator movement in real-time...</div></div>
 
-            <h2>Elevator states</h2>
+            <h3>Elevator states</h3>
 
             <table>
                 <thead>
@@ -48,7 +50,7 @@
                 </tbody>
             </table>
 
-            <h2>Update elevator state</h2>
+            <h3>Update elevator state</h3>
             <form id="updateForm">
                 <label for="elevatorId">Elevator ID</label>
                 <input type="number" id="elevatorId" name="elevatorId" required><br><br>
@@ -59,7 +61,7 @@
                 <button type="button" onclick="updateElevatorState()">Update</button>
             </form>
 
-            <h2>Emit an event</h2>
+            <h3>Emit an event</h3>
             <form id="emitEventForm">
                 <label for="floorOrigin">Floor origin</label>
                 <input type="number" id="floorOrigin" name="floorOrigin" required><br><br>
@@ -72,7 +74,7 @@
             </form>
             <br><br>
 
-            <h2>Fetch elevator states</h2>
+            <h3>Fetch elevator states</h3>
             <button type="button" onclick="fetchElevatorStates()">Fetch data</button>
             <table>
                 <thead>

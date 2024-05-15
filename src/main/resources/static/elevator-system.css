@@ -12,3 +12,33 @@
     bottom: 0;
     transition: bottom 1s ease-in-out;
 }
+.btn-group button {
+    background-color: #7599b1;
+    border: 1px solid #d7d7d7;
+    color: white;
+    padding: 6px 15px;
+    cursor: pointer;
+    float: left;
+}
+.btn-group:after {
+      content: "";
+      clear: both;
+      display: table;
+}
+.btn-group button:hover, button:hover {
+    background-color: #4c6d83;
+}
+button {
+    background-color: #7599b1;
+    border: 1px solid #d7d7d7;
+    color: white;
+    padding: 6px 15px;
+    cursor: pointer;
+}
+h1 {
+    text-align: center;
+}
+#placeholder {
+    text-align: center;
+    font-style: italic;
+}

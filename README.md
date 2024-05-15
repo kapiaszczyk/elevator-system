@@ -1,6 +1,6 @@
 # Elevator System Simulator
 
-Simulation of a simplified elevator system capable of simulating up to 16 elevators. For README in polish, go to [PL_README.md](PL_README.md).
+Simulation of a simplified elevator system capable of simulating up to 16 elevators. For README in Polish, go to [PL_README.md](PL_README.md).
 
 <!-- Building -->
 ## Building

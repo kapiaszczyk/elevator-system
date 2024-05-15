@@ -29,7 +29,7 @@ function disconnectWebSocket() {
 
 function createElevatorDivs(numElevators) {
     var elevatorContainer = document.getElementById('elevatorContainer');
-    elevatorContainer.innerHTML = ''; // Clear previous contents
+    elevatorContainer.innerHTML = '';
     elevatorContainer.style.height = simulationHeight + 'px';
 
     for (var i = 0; i < numElevators; i++) {

@@ -63,7 +63,7 @@ public class SimulationService {
     }
 
     public void startRandomEventEmitter() {
-        if (simulationRunning) {
+        if (simulationRunning && !dispatchEventEmitter.isRunning()) {
             LOGGER.info("Starting random event emitter");
             dispatchEventEmitter.start();
         }

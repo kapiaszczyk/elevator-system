@@ -110,7 +110,7 @@ States can be fetched manually as well.
 | `/` | *GET* | Render the index page. |
 
 *This table was generated from openAPI docs
-using [this script](https://github.com/kapiaszczyk/python-scripts/blob/main/extract_openapi_paths.py)*.
+using [this script](https://github.com/kapiaszczyk/python-scripts/blob/main/documentation_tools/extract_openapi_paths.py)*.
 
 <!-- Architectural choices, assumptions etc. -->
 ## Architecture

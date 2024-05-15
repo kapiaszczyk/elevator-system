@@ -1,5 +1,7 @@
 package org.example.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.example.model.State;
 import org.example.simulation.SimulationService;
 import org.slf4j.Logger;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Controller;
 
 import java.util.List;
 
+@Tag(name = "Websocket controller", description = "This class is responsible for sending the elevator states to the subscribed clients.")
 @Controller
 public class WebSocketController {
 
@@ -22,6 +25,7 @@ public class WebSocketController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WebSocketController.class.getSimpleName());
 
+    @Operation(summary = "Send elevator states to the subscribed clients.")
     @Scheduled(fixedRate = 100)
     public void sendWebSocketMessage() {
         try {

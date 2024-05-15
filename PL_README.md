@@ -1,7 +1,5 @@
 # Elevator System Simulator
 
-![Screenshot of the simulation](image-1.png)
-
 Symulacja uproszczonego systemu wind zdolnego do symulacji do 16 wind.
 
 <!-- Building -->
@@ -58,6 +56,8 @@ Aplikacja może zostać zatrzymana za pomocą  `CTRL+C`.
 
 <!-- How to use the panel -->
 ## Obsługa
+
+![Screenshot of the simulation](image-1.png)
 
 Symulacja może być kontrolowana bezpośrednio przez punkty końcowe (patrz "Punkty końcowe API") lub za pomocą panelu dostępnego pod adresem `hostname:port` (np. `http://localhost:8080`).
 

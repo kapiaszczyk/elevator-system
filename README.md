@@ -115,7 +115,8 @@ using [this script](https://github.com/kapiaszczyk/python-scripts/blob/main/docu
 <!-- Architectural choices, assumptions etc. -->
 ## Architecture
 
-The application is supported by `Spring Web MVC` and `Spring Boot` to allow for easier interaction with the simulation. `SimulationService` is the service layer for the `SimulationController`, which in turn handles the API calls.
+The application is supported by `Spring Web MVC` and `Spring Boot` to allow for easier interaction with the simulation. The API is documented with openAPI, the documentation can be accessed via `http://localhost:8080/swagger-ui/index.html`.
+`SimulationService` is the service layer for the `SimulationController`, which in turn handles the API calls.
 
 At its core, the `ElevatorSystem` acts as the centralized facade for all the interactions. `SystemContext` holds the business logic and the objects representing the state of the system.
 

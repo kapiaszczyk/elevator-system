@@ -63,7 +63,7 @@ The application can be stopped with the `CTRL+C` interrupt.
 <!-- How to use the panel -->
 ## Usage
 
-![Screenshot of the simulation](image-1.png)
+![Screenshot of the simulation](https://github.com/kapiaszczyk/elevator-system/assets/41442206/08535b7c-1bf2-4f40-80af-8da0a813759d)
 
 The simulation can be controlled either directly via the endpoints (see "API Endpoints") or using the panel available at `hostname:port` (eg. `http://localhost:8080`).
 

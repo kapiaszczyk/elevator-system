@@ -1,5 +1,6 @@
 package org.example.dispatcher;
 
+import org.example.constants.Constants;
 import org.example.event.FloorDispatchEvent;
 import org.example.event.InElevatorDispatchEvent;
 import org.example.model.Elevator;
@@ -10,7 +11,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-public class InternalDispatcherTest {
+public class InternalDispatcherTests {
 
     private InternalDispatcher internalDispatcher;
     private Elevator elevator;
@@ -23,7 +24,7 @@ public class InternalDispatcherTest {
 
     @Test
     public void givenHandleEvent_whenFloorDispatchEvent_thenShouldAddFloorRequestToElevator() {
-        FloorDispatchEvent event = mock(FloorDispatchEvent.class);
+        FloorDispatchEvent event = new FloorDispatchEvent(0, Constants.Direction.DOWN);
         int floorOrigin = 5;
         event.setFloorOrigin(floorOrigin);
 
@@ -34,7 +35,7 @@ public class InternalDispatcherTest {
 
     @Test
     public void givenHandleEvent_whenInElevatorDispatchEvent_thenShouldAddTargetFloorRequestToElevator() {
-        InElevatorDispatchEvent event = mock(InElevatorDispatchEvent.class);
+        InElevatorDispatchEvent event = new InElevatorDispatchEvent(0, 0);
         int targetFloor = 10;
         event.setTargetFloor(targetFloor);
 

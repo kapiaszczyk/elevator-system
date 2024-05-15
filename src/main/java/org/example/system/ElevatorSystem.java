@@ -17,11 +17,11 @@ public class ElevatorSystem {
         systemContext = new SystemContext();
     }
 
-    public void pickup(int originFloor, Constants.Direction direction) {
+    public void pickup(int originFloor, Constants.Direction direction) throws IllegalArgumentException {
         this.systemContext.publishEvent(originFloor, direction);
     }
 
-    public void update(int elevatorId, int currentFloor, int destinationFloor) {
+    public void update(int elevatorId, int currentFloor, int destinationFloor) throws IllegalArgumentException {
         this.systemContext.updateElevatorStatus(elevatorId, currentFloor, destinationFloor);
     }
 

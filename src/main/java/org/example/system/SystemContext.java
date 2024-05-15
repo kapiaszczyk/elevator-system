@@ -41,12 +41,31 @@ public class SystemContext {
 
     }
 
-    public void updateElevatorStatus(int elevatorId, int currentFloor, int destinationFloor) {
+    public void updateElevatorStatus(int elevatorId, int currentFloor, int destinationFloor) throws IllegalArgumentException {
+
+        if(elevatorId < 0 || elevatorId >= Constants.NUM_ELEVATORS) {
+            throw new IllegalArgumentException("Invalid elevator id");
+        }
+        if(currentFloor < 0 || currentFloor > Constants.NUM_FLOORS) {
+            throw new IllegalArgumentException("Invalid current floor number");
+        }
+        if(destinationFloor < 0 || destinationFloor > Constants.NUM_FLOORS) {
+            throw new IllegalArgumentException("Invalid destination floor number");
+        }
+
         this.elevators.get(elevatorId).updateState(currentFloor, destinationFloor);
     }
 
-    public void publishEvent(int origin, Constants.Direction direction) {
+    public void publishEvent(int origin, Constants.Direction direction) throws IllegalArgumentException {
         Event event = new FloorDispatchEvent(origin, direction);
+
+        if(origin < 0 || origin > Constants.NUM_FLOORS) {
+            throw new IllegalArgumentException("Invalid floor number");
+        }
+        if (direction == null) {
+            throw new IllegalArgumentException("Invalid direction");
+        }
+
         eventBus.publish(event);
     }
 

@@ -9,22 +9,26 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public abstract class EventEmitter {
 
     private final Thread thread;
-    private final AtomicBoolean stopEvent;
+    private volatile AtomicBoolean stopEvent = new AtomicBoolean(false);
     private final Logger LOGGER;
 
     public EventEmitter() {
         this.thread = new Thread(this::emitEvents);
-        this.stopEvent = new AtomicBoolean(false);
         this.LOGGER = LoggerFactory.getLogger(getClass().getSimpleName());
     }
 
     public void start() {
-        if (thread.isAlive()) {
-            LOGGER.info("{} is already running.", getClass().getSimpleName());
-            return;
+        try {
+            if (!thread.isAlive()) {
+                thread.start();
+                LOGGER.info("{} started.", getClass().getSimpleName());
+            } else {
+                LOGGER.info("{} is already running.", getClass().getSimpleName());
+            }
         }
-        thread.start();
-        LOGGER.info("{} started.", getClass().getSimpleName());
+        catch (IllegalThreadStateException e) {
+            LOGGER.error("Thread is already running.");
+        }
     }
 
     public void stop() {
@@ -32,15 +36,18 @@ public abstract class EventEmitter {
             stopEvent.set(true);
             try {
                 thread.join();
+                LOGGER.info("{} stopped.", getClass().getSimpleName());
             } catch (InterruptedException e) {
                 LOGGER.warn("Interrupted while waiting for thread to join.");
                 Thread.currentThread().interrupt();
+            } finally {
+                stopEvent.set(false);
             }
-            LOGGER.info("{} stopped.", getClass().getSimpleName());
         } else {
             LOGGER.info("{} is not running.", getClass().getSimpleName());
         }
     }
+
 
     private void emitEvents() {
         Random random = new Random();
@@ -56,5 +63,9 @@ public abstract class EventEmitter {
     }
 
     protected abstract void generateEvent();
+
+    public boolean isRunning() {
+        return thread.isAlive();
+    }
 
 }

@@ -2,12 +2,12 @@ package org.example.dispatcher;
 
 import org.example.event.FloorDispatchEvent;
 import org.example.event.InElevatorDispatchEvent;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class ExternalDispatcherTests {
@@ -15,7 +15,7 @@ public class ExternalDispatcherTests {
     private ExternalDispatcher externalDispatcher;
     private ArrayList<InternalDispatcher> internalDispatchers;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         internalDispatchers = new ArrayList<>();
         internalDispatchers.add(mock(InternalDispatcher.class));

@@ -4,10 +4,10 @@ import org.example.constants.Constants;
 import org.example.event.FloorDispatchEvent;
 import org.example.event.InElevatorDispatchEvent;
 import org.example.model.Elevator;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -16,7 +16,7 @@ public class InternalDispatcherTests {
     private InternalDispatcher internalDispatcher;
     private Elevator elevator;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         elevator = mock(Elevator.class);
         internalDispatcher = new InternalDispatcher(elevator);

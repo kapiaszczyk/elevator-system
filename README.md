@@ -1,7 +1,5 @@
 # Elevator System Simulator
 
-![Screenshot of the simulation](image-1.png)
-
 Simulation of a simplified elevator system capable of simulating up to 16 elevators. For README in polish, go to [PL_README.md](PL_README.md).
 
 <!-- Building -->
@@ -58,6 +56,8 @@ The application can be stopped with the `CTRL+C` interrupt.
 
 <!-- How to use the panel -->
 ## Usage
+
+![Screenshot of the simulation](image-1.png)
 
 The simulation can be controlled either directly via the endpoints (see "API Endpoints") or using the panel available at `hostname:port` (eg. `http://localhost:8080`).
 

@@ -57,7 +57,7 @@ Aplikacja może zostać zatrzymana za pomocą  `CTRL+C`.
 <!-- How to use the panel -->
 ## Obsługa
 
-![Screenshot of the simulation](image-1.png)
+![Screenshot of the simulation](https://github.com/kapiaszczyk/elevator-system/assets/41442206/08535b7c-1bf2-4f40-80af-8da0a813759d)
 
 Symulacja może być kontrolowana bezpośrednio przez punkty końcowe (patrz "Punkty końcowe API") lub za pomocą panelu dostępnego pod adresem `hostname:port` (np. `http://localhost:8080`).
 

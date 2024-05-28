@@ -6,17 +6,15 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Elevator {
 
     private static int nextId = 0;
-
     private final int id;
     private final int speed = Constants.ELEVATOR_SPEED;
     private State state;
     private final LinkedBlockingDeque<Integer> floorQueue = new LinkedBlockingDeque<>();
-    private volatile AtomicBoolean isActive = new AtomicBoolean(false);
+    private volatile boolean isActive = false;
     private final Object lock = new Object();
     private final Thread elevatorThread;
     private final Logger LOGGER = LoggerFactory.getLogger(Elevator.class.getSimpleName());
@@ -41,7 +39,7 @@ public class Elevator {
     private void processJobs() {
         while (true) {
 
-            LOGGER.trace("Elevator {} is checking if it can process jobs... ({})", this.id, this.isActive.toString());
+            LOGGER.trace("Elevator {} is checking if it can process jobs... ({})", this.id, this.isActive);
 
             try {
                 Thread.sleep(100L);
@@ -50,49 +48,62 @@ public class Elevator {
             }
 
             synchronized (lock) {
-                while (!isActive.get()) {
+                while (!isActive) {
                     try {
                         lock.wait();
                     } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
+                        Thread.currentThread().interrupt();
+                        LOGGER.error("[{}] Elevator thread interrupted", this.id);
+                        return;
                     }
                 }
 
-                try {
-                    synchronized (elevatorThread) {
-                        if (floorQueue.isEmpty()) {
-                            continue;
-                        }
+                processNextRequest();
 
-                        int targetFloor = floorQueue.peek();
-
-                        if (targetFloor == state.getCurrentFloor()) {
-                            LOGGER.info("[{}] Already at floor: {}", this.id, targetFloor);
-                            floorQueue.take();
-                            this.setIsActive(false);
-                            continue;
-                        }
-
-                        int distance = Math.abs(state.getCurrentFloor() - targetFloor);
-                        int neededTime = distance / speed;
-                        state.setDestinationFloor(targetFloor);
-                        LOGGER.info("[{}] Moving from {} to {}. This will take {} seconds", this.id, state.getCurrentFloor(), targetFloor, neededTime);
-
-                        // Simulates the time it will take the elevator to reach the destination
-                        Thread.sleep(neededTime * 1000L + 100L);
-
-                        state.setCurrentFloor(targetFloor);
-                        LOGGER.info("[{}] Arrived at {}", this.id, state.getCurrentFloor());
-                        floorQueue.take();
-                        LOGGER.debug("[{}] Remaining in queue: {}", this.id, getFloorQueueContentsAsString());
-
-                        this.setIsActive(false);
-                    }
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
             }
         }
+    }
+
+    private void processNextRequest() {
+        try {
+            if (floorQueue.isEmpty()) {
+                return;
+            }
+
+            int targetFloor = floorQueue.peek();
+
+            if (targetFloor == state.getCurrentFloor()) {
+                LOGGER.info("[{}] Already at floor: {}", this.id, targetFloor);
+                floorQueue.take();
+                this.setIsActive(false);
+                return;
+            }
+
+            moveToFloor(targetFloor);
+
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            LOGGER.error("[{}] Elevator moving interrupted", this.id);
+        }
+    }
+
+    private void moveToFloor(int targetFloor) throws InterruptedException {
+
+        double distance = Math.abs(state.getCurrentFloor() - targetFloor);
+        double neededTime = distance / speed;
+
+        state.setDestinationFloor(targetFloor);
+
+        LOGGER.info("[{}] Moving from {} to {}. This will take {} seconds", this.id, state.getCurrentFloor(), targetFloor, neededTime);
+
+        Thread.sleep((long) (neededTime * 1000L + 100L));
+
+        state.setCurrentFloor(targetFloor);
+        LOGGER.info("[{}] Arrived at {}", this.id, state.getCurrentFloor());
+        floorQueue.take();
+        LOGGER.debug("[{}] Remaining in queue: {}", this.id, getFloorQueueContentsAsString());
+
+        this.setIsActive(false);
     }
 
     private synchronized int getNextId() {
@@ -104,7 +115,7 @@ public class Elevator {
     }
 
     public void stop() {
-        isActive.set(false);
+        isActive = false;
     }
 
     public State getState() {
@@ -115,12 +126,12 @@ public class Elevator {
         this.state = state;
     }
 
-    public AtomicBoolean getIsActive() {
+    public boolean getIsActive() {
         return isActive;
     }
 
     public void setIsActive(boolean active) {
-        isActive.set(active);
+        isActive = active;
         synchronized (lock) {
             lock.notify();
         }
